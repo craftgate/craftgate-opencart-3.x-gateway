@@ -1,0 +1,169 @@
+<style>
+    .description{
+        margin: 5px 0 0 0;
+        color: #949494;
+    }
+</style>
+{{ header }}{{ column_left }}
+<div id="content">
+    <div class="page-header">
+        <div class="container-fluid">
+            <div class="pull-right">
+                <button type="submit" form="form-free-checkout" data-toggle="tooltip" title="{{ button_save }}"
+                        class="btn btn-primary"><i class="fa fa-save"></i></button>
+                <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i
+                            class="fa fa-reply"></i></a></div>
+            <h1>{{ heading_title }}</h1>
+            <ul class="breadcrumb">
+                {% for breadcrumb in breadcrumbs %}
+                    <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="container-fluid">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ heading_title }}</h3>
+            </div>
+            <div class="panel-body">
+                <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-free-checkout"
+                      class="form-horizontal">
+                    <div class="tab-content">
+                        <div class="tab-pane  active" id="tab-api">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="payment_craftgate_payment_gateway_status">{{ entry_status }} </label>
+                                <div class="col-sm-10">
+                                    <select name="payment_craftgate_payment_gateway_status" class="form-control">
+                                        <option value="1" {{ payment_craftgate_payment_gateway_status ? 'selected' : '' }}>{{ text_enabled }}</option>
+                                        <option value="0" {{ payment_craftgate_payment_gateway_status ? '' : 'selected' }}>{{ text_disabled }}</option>
+                                    </select>
+                                    <p class="description">{{text_status_help}}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="payment_craftgate_payment_gateway_live_api_key"> {{ entry_title }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="payment_craftgate_payment_gateway_title"
+                                           value="{{ payment_craftgate_payment_gateway_title ? payment_craftgate_payment_gateway_title : text_title  }}" class="form-control" placeholder="{{ text_title }}"/>
+                                    {% if error_payment_craftgate_payment_gateway_title %}
+                                        <span class="text-danger">{{ error_payment_craftgate_payment_gateway_title }}</span>
+                                    {% endif %}
+                                    <p class="description">{{text_title_help}}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="payment_craftgate_payment_gateway_live_api_key"> {{ entry_live_api_key }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="payment_craftgate_payment_gateway_live_api_key"
+                                           value="{{ payment_craftgate_payment_gateway_live_api_key }}" class="form-control"/>
+                                    {% if error_payment_craftgate_payment_gateway_live_api_key %}
+                                        <span class="text-danger">{{ error_payment_craftgate_payment_gateway_live_api_key }}</span>
+                                    {% endif %}
+                                    <p class="description">{{text_live_api_key_help}}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="payment_craftgate_payment_gateway_live_secret_key"> {{ entry_live_secret_key }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="payment_craftgate_payment_gateway_live_secret_key"
+                                           value="{{ payment_craftgate_payment_gateway_live_secret_key }}"
+                                           class="form-control"/>
+                                    {% if error_payment_craftgate_payment_gateway_live_secret_key %}
+                                        <span class="text-danger">{{ error_payment_craftgate_payment_gateway_live_secret_key }}</span>
+                                    {% endif %}
+                                    <p class="description">{{text_live_secret_key_help}}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="payment_craftgate_payment_gateway_sandbox_api_key"> {{ entry_sandbox_api_key }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="payment_craftgate_payment_gateway_sandbox_api_key"
+                                           value="{{ payment_craftgate_payment_gateway_sandbox_api_key }}"
+                                           class="form-control"/>
+                                    {% if error_payment_craftgate_payment_gateway_sandbox_api_key %}
+                                        <span class="text-danger">{{ error_payment_craftgate_payment_gateway_sandbox_api_key }}</span>
+                                    {% endif %}
+                                    <p class="description">{{text_sandbox_api_key_help}}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="payment_craftgate_payment_gateway_sandbox_secret_key"> {{ entry_sandbox_secret_key }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="payment_craftgate_payment_gateway_sandbox_secret_key"
+                                           value="{{ payment_craftgate_payment_gateway_sandbox_secret_key }}"
+                                           class="form-control"/>
+                                    {% if error_payment_craftgate_payment_gateway_sandbox_secret_key %}
+                                        <span class="text-danger">{{ error_payment_craftgate_payment_gateway_sandbox_secret_key }}</span>
+                                    {% endif %}
+                                    <p class="description">{{text_sandbox_secret_key_help}}</p>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="payment_craftgate_payment_gateway_sandbox_mode">{{ entry_sandbox_mode }} </label>
+                                <div class="col-sm-10">
+                                    <select name="payment_craftgate_payment_gateway_sandbox_mode" class="form-control">
+                                        <option value="1" {{ payment_craftgate_payment_gateway_sandbox_mode ? 'selected' : '' }}>{{ text_enabled }}</option>
+                                        <option value="0" {{ payment_craftgate_payment_gateway_sandbox_mode ? '' : 'selected' }}>{{ text_disabled }}</option>
+                                    </select>
+                                    <p class="description">{{ text_sandbox_mode_help }}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label" for="payment_craftgate_payment_gateway_order_status_id">
+                                        {{ entry_order_status }}
+                                </label>
+                                <div class="col-sm-10">
+                                    <select name="payment_craftgate_payment_gateway_order_status_id" id="input-order-status"
+                                            class="form-control">
+                                        {% for order_status in order_statuses %}
+                                            {% if order_status.order_status_id  ==  payment_craftgate_payment_gateway_order_status_id %}
+                                                <option value="{{ order_status.order_status_id }}"
+                                                        selected="selected">{{ order_status.name }}</option>
+                                            {% else %}
+                                                <option value="{{ order_status.order_status_id }}">{{ order_status.name }}</option>
+                                            {% endif %}
+
+                                        {% endfor %}
+                                    </select>
+                                    <p class="description">{{ text_order_status_help }}</p>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="input-order-status">{{ entry_sort_order }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="payment_craftgate_payment_gateway_sort_order"
+                                           value="{{ payment_craftgate_payment_gateway_sort_order }}" size="1"
+                                           class="form-control"/>
+                                    <p class="description">{{ text_order_help }}</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ footer }}
+
+

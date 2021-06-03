@@ -1,0 +1,107 @@
+<style>
+    #craftgate_payment_form {
+        height: 858px;
+    }
+
+    #craftgate_payment_form iframe {
+        border: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    @-webkit-keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        50% {
+            transform: rotate(180deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        50% {
+            transform: rotate(180deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+
+    .craftgate-loader {
+        position: relative;
+        margin: 75px auto;
+        width: 75px;
+        height: 75px;
+        display: block;
+        overflow: hidden;
+    }
+
+    .craftgate-loader div {
+        height: 100%;
+    }
+
+    /* craftgate-loader 1 */
+    .loader1, .loader1 div {
+        border-radius: 50%;
+        padding: 2px;
+        border: 2px solid transparent;
+        -webkit-animation: rotate linear 3.5s infinite;
+        animation: rotate linear 3.5s infinite;
+        border-top-color: #8984cc;
+        border-bottom-color: #333edd;
+    }
+
+    .craftgate-loader, .craftgate-loader * {
+        will-change: transform;
+    }
+
+
+</style>
+
+<div id="craftgate_payment_gateway_container">
+    <div class='craftgate-loader loader1'>
+        <div>
+            <div>
+                <div>
+                    <div>
+                        <div>
+                            <div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="craftgate_payment_form" style="display: none"></div>
+</div>
+
+<script type="text/javascript">
+    const loaderEl = $('.craftgate-loader');
+    const generalError = '{{ text_general_error }}'
+    $.ajax({
+        url: 'index.php?route=extension/payment/craftgate_payment_gateway/initCheckoutForm',
+        type: 'post',
+        dataType: 'json',
+        cache: false,
+        success: function (response) {
+            console.log(response)
+            if (response.pageUrl) {
+                $('#craftgate_payment_form').append(`<iframe src="${response.pageUrl}&iframe=true"></iframe>`)
+                $('#craftgate_payment_form').show()
+            } else {
+                const {errors: {errorDescription = generalError} = {}} = response;
+                $('#craftgate_payment_gateway_container').append('<div class="alert alert-danger">' + errorDescription + '</div>');
+            }
+            loaderEl.hide();
+        }
+
+    });
+</script>
+
