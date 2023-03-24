@@ -19,6 +19,7 @@ $_['text_live_secret_key_help'] = 'Canlı Secret Key’inizi giriniz.';
 $_['text_sandbox_api_key_help'] = 'Sandbox API Key’inizi giriniz.';
 $_['text_sandbox_secret_key_help'] = 'Sandbox Secret Key’inizi giriniz.';
 $_['text_sandbox_mode_help'] = 'Sandbox API bilgilerinizi kullanarak test modunu aktif edebilirsiniz.';
+$_['text_enabled_payment_methods_help'] = 'Ortak ödeme sayfasında görünmesi istenen ödeme yöntemleri. Hiç gönderilmediğinde mevcuttaki tüm ödeme yöntemleri listelenir. <br> Örnek: CARD, SODEXO</br>Detaylar için <a target="_blank" href="https://developer.craftgate.io">Craftgate Developer Portal</a> ';
 $_['text_order_status_help'] = 'Ödeme tamamlandıktan sonra siparişin durumu.';
 $_['text_order_help'] = 'Ödeme sayfasındaki sıralaması.';
 
@@ -30,6 +31,7 @@ $_['entry_live_secret_key'] = 'Canlı Secret Key';
 $_['entry_sandbox_api_key'] = 'Sandbox API Key';
 $_['entry_sandbox_secret_key'] = 'Sandbox Secret Key';
 $_['entry_sandbox_mode'] = 'Sandbox Modu';
+$_['entry_enabled_payment_methods'] = 'Kullanılabilir Ödeme Yöntemleri';
 $_['error_required'] = 'Bu alanın doldurulması zorunludur.';
 $_['entry_order_status'] = 'Sipariş Durumu';
 $_['entry_sort_order'] = 'Sıra No';
