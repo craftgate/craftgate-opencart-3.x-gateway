@@ -78,6 +78,17 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
 
     }
 
+    private function retrieveEnabledPaymentMethods()
+    {
+        $this->load->model('extension/payment/craftgate_payment_gateway');
+        $enabledPaymentMethods = $this->config->get('payment_craftgate_payment_gateway_enabled_payment_methods');
+        if (empty($enabledPaymentMethods)) {
+            return null;
+        }
+        return array_map('trim', explode(',', $enabledPaymentMethods));
+
+    }
+
     private function validateCallbackParams()
     {
         $order_id = $this->request->get["order_id"];
@@ -122,6 +133,7 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
             'paymentGroup' => 'LISTING_OR_SUBSCRIPTION',
             'conversationId' => $order_id,
             'callbackUrl' => $this->getSiteUrl() . 'index.php?route=extension/payment/craftgate_payment_gateway/callback&order_id=' . $order_id,
+            'enabledPaymentMethods' => $this->retrieveEnabledPaymentMethods(),
             'items' => $items,
         );
     }
@@ -174,7 +186,7 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
 
     private function formatPrice($number)
     {
-        return round((float) $number, 2);
+        return round((float)$number, 2);
     }
 
     private function getShippingInfo()
@@ -252,10 +264,10 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
     {
         static $ret;
 
-        isset($ret) || $ret =@ (
+        isset($ret) || $ret = @ (
             $_SERVER['REQUEST_SCHEME'] == 'https' ||
-            $_SERVER['SERVER_PORT']    == '443'   ||
-            $_SERVER['HTTPS']          == 'on'
+            $_SERVER['SERVER_PORT'] == '443' ||
+            $_SERVER['HTTPS'] == 'on'
         );
 
         return $ret;

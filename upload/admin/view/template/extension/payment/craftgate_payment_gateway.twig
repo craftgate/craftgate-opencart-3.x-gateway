@@ -125,6 +125,20 @@
                             </div>
 
                             <div class="form-group">
+                                <label class="col-sm-2 control-label"
+                                       for="payment_craftgate_payment_gateway_enabled_payment_methods"> {{ entry_enabled_payment_methods }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" name="payment_craftgate_payment_gateway_enabled_payment_methods"
+                                           value="{{ payment_craftgate_payment_gateway_enabled_payment_methods }}"
+                                           class="form-control"/>
+                                    {% if error_payment_craftgate_payment_gateway_enabled_payment_methods %}
+                                        <span class="text-danger">{{ error_payment_craftgate_payment_gateway_enabled_payment_methods }}</span>
+                                    {% endif %}
+                                    <p class="description">{{text_enabled_payment_methods_help}}</p>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
                                 <label class="col-sm-2 control-label" for="payment_craftgate_payment_gateway_order_status_id">
                                         {{ entry_order_status }}
                                 </label>

@@ -14,6 +14,7 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
         array('name' => 'payment_craftgate_payment_gateway_sandbox_api_key', 'rules' => 'required'),
         array('name' => 'payment_craftgate_payment_gateway_sandbox_secret_key', 'rules' => 'required'),
         array('name' => 'payment_craftgate_payment_gateway_sandbox_mode', 'rules' => ''),
+        array('name' => 'payment_craftgate_payment_gateway_enabled_payment_methods', 'rules' => ''),
         array('name' => 'payment_craftgate_payment_gateway_order_status_id', 'rules' => ''),
         array('name' => 'payment_craftgate_payment_gateway_sort_order', 'rules' => ''),
     );
