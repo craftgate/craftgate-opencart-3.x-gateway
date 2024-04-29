@@ -3,6 +3,9 @@ error_reporting(0);
 
 class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
 {
+    const ORDER_STATUS_ID_INITIAL = 0;
+    const ORDER_STATUS_ID_FAILED = 10;
+
     public function index()
     {
         $this->load->language('extension/payment/craftgate_payment_gateway');
@@ -33,21 +36,12 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
         try {
             $this->validateCallbackParams();
             $order_id = $this->request->get['order_id'];
-            $order_info = $this->getOrder($order_id);
 
             $checkout_form_result = $this->initCraftgateClient()->retrieveCheckoutPayment($this->request->post["token"]);
             $this->validateOrder($checkout_form_result);
 
             if (!isset($checkout_form_result->paymentError) && $checkout_form_result->paymentStatus === 'SUCCESS') {
-                $message = 'Craftgate Payment Id: ' . $checkout_form_result->id . ' <br>';
-                $message .= 'Craftgate Payment URL: ' . $this->buildCraftgatePaymentUrl($checkout_form_result->id);
-                $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('payment_craftgate_payment_gateway_order_status_id'), $message, false);
-
-                if ($checkout_form_result->installment > 1) {
-                    $this->model_extension_payment_craftgate_payment_gateway->addInstallmentFeeToOrder($order_info['order_id'], $checkout_form_result->paidPrice);
-                    $installmentMessage = $checkout_form_result->cardBrand . ' - ' . $checkout_form_result->installment . ' Installment';
-                    $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('payment_craftgate_payment_gateway_order_status_id'), $installmentMessage);
-                }
+                $this->complete_order($checkout_form_result, $order_id);
                 echo "<script>window.top.location.href = '" . $this->url->link('checkout/success', '', $server_conn_slug) . "';</script>";
             } else {
                 $error = $checkout_form_result->paymentError->errorCode . ' - ' . $checkout_form_result->paymentError->errorDescription . ' - ' . $checkout_form_result->paymentError->errorGroup;
@@ -59,6 +53,58 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
             $this->session->data['error'] = $resp_msg;
             echo "<script>window.top.location.href = '" . $this->url->link('checkout/checkout', '', $server_conn_slug) . "';</script>";
         }
+    }
+
+    public function webhook()
+    {
+        $webhook_data = json_decode(file_get_contents('php://input'), true);
+        if (!$this->should_process_webhook_request($webhook_data)) {
+            exit();
+        }
+
+        $checkout_token = $webhook_data['payloadId'];
+        $checkout_form_result = $this->initCraftgateClient()->retrieveCheckoutPayment($checkout_token);
+
+        if ($checkout_form_result->paymentStatus !== 'SUCCESS' || !isset($checkout_form_result->conversationId)) {
+            exit();
+        }
+
+        $this->complete_order($checkout_form_result, $checkout_form_result->conversationId);
+    }
+
+    private function complete_order($checkout_form_result, $order_id)
+    {
+        $order_info = $this->getOrder($order_id);
+        if (!$this->is_order_eligible_to_complete($order_info)) {
+            return;
+        }
+
+        $message = 'Craftgate Payment Id: ' . $checkout_form_result->id . ' <br>';
+        $message .= 'Craftgate Payment URL: ' . $this->buildCraftgatePaymentUrl($checkout_form_result->id);
+        $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('payment_craftgate_payment_gateway_order_status_id'), $message, false);
+        if ($checkout_form_result->installment > 1) {
+            $this->model_extension_payment_craftgate_payment_gateway->addInstallmentFeeToOrder($order_info['order_id'], $checkout_form_result->paidPrice);
+            $installmentMessage = $checkout_form_result->cardBrand . ' - ' . $checkout_form_result->installment . ' Installment';
+            $this->model_checkout_order->addOrderHistory($order_id, $this->config->get('payment_craftgate_payment_gateway_order_status_id'), $installmentMessage);
+        }
+    }
+
+    private function should_process_webhook_request($webhook_data)
+    {
+        if (!isset($webhook_data) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
+            return false;
+        }
+
+        if ($webhook_data['eventType'] !== 'CHECKOUTFORM_AUTH' || $webhook_data['status'] !== "SUCCESS" || !isset($webhook_data['payloadId'])) {
+            return false;
+        }
+        return true;
+    }
+
+    private function is_order_eligible_to_complete($order_info)
+    {
+        $order_status_id = $order_info['order_status_id'];
+        return in_array($order_status_id, array(self::ORDER_STATUS_ID_INITIAL, self::ORDER_STATUS_ID_FAILED));
     }
 
     private function initCraftgateClient()

@@ -35,7 +35,8 @@ $_['entry_enabled_payment_methods'] = 'Kullanılabilir Ödeme Yöntemleri';
 $_['error_required'] = 'Bu alanın doldurulması zorunludur.';
 $_['entry_order_status'] = 'Sipariş Durumu';
 $_['entry_sort_order'] = 'Sıra No';
-
+$_['entry_webhook_url'] = 'Webhook URL';
+$_['text_webhook_url_help'] = 'Ödeme sonucunun iletileceği URL. Webhook isteklerini alabilmek için Craftgate Merchant Panel üzerinden bu adresi girmelisiniz. Detaylara <a href="https://developer.craftgate.io/webhook">buradan</a> ulaşabilirsiniz.';
 
 // Error
 $_['error_permission'] = 'Yetkiniz yok';
