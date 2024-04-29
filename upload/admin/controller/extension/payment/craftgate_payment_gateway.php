@@ -40,17 +40,16 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
 
         $data['action'] = $this->url->link('extension/payment/craftgate_payment_gateway', 'user_token=' . $this->session->data['user_token'], 'SSL');
         $data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'], 'SSL');
-
         $this->load->model('localisation/order_status');
         if ($data['payment_craftgate_payment_gateway_order_status_id'] == '') {
             $data['payment_craftgate_payment_gateway_order_status_id'] = $this->config->get('config_order_status_id');
         }
 
+        $data['webhook_url'] = HTTPS_CATALOG . 'index.php?route=extension/payment/craftgate_payment_gateway/webhook';
         $data['order_statuses'] = $this->model_localisation_order_status->getOrderStatuses();
         $data['header'] = $this->load->controller('common/header');
         $data['column_left'] = $this->load->controller('common/column_left');
         $data['footer'] = $this->load->controller('common/footer');
-
         $this->response->setOutput($this->load->view('extension/payment/craftgate_payment_gateway', $data));
     }
 
@@ -61,11 +60,11 @@ class ControllerExtensionPaymentCraftgatePaymentGateway extends Controller
         }
 
         foreach ($this->settings_fields as $field) {
-            if(empty($field['rules'])) continue;
+            if (empty($field['rules'])) continue;
 
             $field_name = $field['name'];
-            if($field['rules'] === 'required' && empty($this->request->post[$field_name])){
-                $field_error= $this->language->get("error_$field_name");
+            if ($field['rules'] === 'required' && empty($this->request->post[$field_name])) {
+                $field_error = $this->language->get("error_$field_name");
                 $error_text = $field_error != "error_$field_name" ? $field_error : $this->language->get("error_required");
                 $this->error[$field_name] = $error_text;
             }
